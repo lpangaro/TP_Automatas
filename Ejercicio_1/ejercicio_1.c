@@ -1,3 +1,8 @@
+/* Para compilar: gcc -c -o ejercicio1.o ejercicio1.c -Wall
+ * Para linkear: gcc -o ejercicio1 ejercicio1.o -Wall
+ * Para correr: ./ejercicio1
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
