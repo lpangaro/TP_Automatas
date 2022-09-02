@@ -1,3 +1,15 @@
+Para descargar el repositorio abrir una terminal desde el directorio que se quiere descargar y escribir:
+
+- git clone https://github.com/lpangaro/TP_Automatas
+
+Una vez que realices cambios escribir en una terminal (desde el directorio del repo):
+- git add .
+- git commit -m "un mensaje que explique los cambios"
+- git push
+
+Para descargar los cambios que haya hecho otro (desde el directorio del repo):
+- git pull
+---
 # Trabajo Practico Autómatas
 # Sintaxis y Semántica de los Lenguajes
 [ENUNCIADO](https://github.com/lpangaro/TP_Automatas/blob/main/Enunciado.md) 
