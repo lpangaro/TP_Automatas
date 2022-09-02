@@ -1,6 +1,9 @@
 # Trabajo Practico Autómatas
 # Sintaxis y Semántica de los Lenguajes
-Fecha de entrega: 18 de Septiembre 2022
+[ENUNCIADO](https://github.com/lpangaro/TP_Automatas/blob/main/Enunciado.md) 
+
+
+Fecha de entrega: 18 de Septiembre 2022 
 
 UTN - FRBA  
 Curso: K2006   
