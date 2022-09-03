@@ -26,20 +26,31 @@ https://elcodigoascii.com.ar */
 #define diferenciaASCII 48
 
 #include <stdio.h>
+#include <string.h>
 
 int main() 
 {
-    int numero;
-    char caracter;
-    printf("Ingrese un caracter numerico: " );
-    scanf("%c", &caracter);
+    int numero = 0;
+    int CDU = 1;    // Clasificación Decimal Universal 1, 10, 100, 1000 ...
+    int largo, i; 
+    char string [100];
 
-    printf("El caracter ingresado es: ´%c´ \n", caracter);
-    printf("En ASCII el ´%c´ esta representado por el valor: %d \n",caracter, caracter);
+    printf("Ingrese un string numerico: " );
+    scanf("%s", string);
 
-    numero = caracter - diferenciaASCII;
+    largo = strlen(string);
+    //printf("el largo de la cadena es: %d \n", largo );
 
+    for (i = (largo-1) ; i >= 0 ; i--) { // uso largo-1 porque el indice del vector comienza en 0
+        numero += (string[i] - diferenciaASCII) * CDU;
+        CDU *= 10; // Se utiliza para calcular unidades, decenas, centenas ...
+    }
+
+    printf("El string ingresado es: ´%s´ \n", string);
     printf("La conversion se realizo exitosamente, el NUMERO (int) ingresado es: %d \n", numero);
 
     return 0;
 }
+
+
+
