@@ -18,9 +18,8 @@ enum ESTADOS{                                                                   
     DESCONOCIDO                                                                         // DESCONOCIDO actúa como estado de rechazo
 };
 
-int cantidadElementos(FILE * );
 void reconocer(char* valor, FILE* archSalida, int* cant_oct, int* cant_deci, int* cant_hexa);
-void separarPorComasYReconocer (char*, FILE* salida);
+void separar_y_reconocer (char*, FILE* salida);
 void ingreso_por_archivo (char*, char*);
 
 int main(){
@@ -44,15 +43,14 @@ int main(){
             break;
         case 2 : 
             printf("Ingrese el nombre del archivo (ej: entrada.txt): ");
-            //scanf ("%s", archivo);
-            strcpy(archivo, "entrada.txt");
+            scanf ("%s", archivo);
             ingreso_por_archivo(archivo, vector_palabras);
             break;
         default:
             printf ("No ingreso una opcion valida \n");
     }
     
-    separarPorComasYReconocer(vector_palabras, f_salida);                           // PASO EL ARRAY CON LAS PALABRAS A RECONOCER
+    separar_y_reconocer(vector_palabras, f_salida);                           // PASO EL ARRAY CON LAS PALABRAS A RECONOCER
     printf("Archivo creado exitosamente. Para visiualizarlo escriba: ´cat salida.txt´\n");
     
     fclose (f_salida);
@@ -82,7 +80,7 @@ void ingreso_por_archivo (char* archivo, char* vector_palabras) {
 
 
 //SEPARA CADA ELEMENTO POR ´&´, EVALUA CON EL AUTOMATA Y LO GUARDA JUNTO A SU TIPO EN EL ARCH SALIDA.
-void separarPorComasYReconocer (char* vector, FILE* f_salida){ 
+void separar_y_reconocer (char* vector, FILE* f_salida){ 
     int cant_oct = 0, cant_deci = 0, cant_hexa = 0;
     char* str = NULL;
     const char* sentinela = "&";
@@ -107,7 +105,6 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                 else if(isdigit(valor[i]))                           // isdigit evalua si es un caracter numerico.
                     estado = CONSTANTE_DECIMAL;               
                 else if (valor[i] == '-'){
-                    //i++;
                     estado = CONSTANTE_DECIMAL;
                 }
                 else
