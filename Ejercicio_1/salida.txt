@@ -1,9 +1,12 @@
-0xFF                	HEXADECIMAL
-127                 	DECIMAL
+Numero                 Cant   Tipo
+0xFF                	 1 HEXADECIMAL
+127                 	 1 DECIMAL
 0159                	NO RECONOCIDA
-0xaBb1              	HEXADECIMAL
+0xaBb1              	 2 HEXADECIMAL
 0Xx                 	NO RECONOCIDA
-0                   	OCTAL
-010                 	OCTAL
+0                   	 1 OCTAL
+010                 	 2 OCTAL
 09                  	NO RECONOCIDA
 127ABACB            	NO RECONOCIDA
+07                  	 3 OCTAL
+-10                 	 2 DECIMAL
