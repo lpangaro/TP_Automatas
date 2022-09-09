@@ -28,23 +28,17 @@ https://elcodigoascii.com.ar */
 #include <stdio.h>
 #include <string.h>
 
+int my_atoi(char *);
+
 int main() 
 {
-    int numero = 0;
-    int CDU = 1;    // Clasificación Decimal Universal 1, 10, 100, 1000 ...
-    int largo, i; 
+    int numero;
     char string [100];
 
     printf("Ingrese un string numerico: " );
     scanf("%s", string);
 
-    largo = strlen(string);
-    //printf("el largo de la cadena es: %d \n", largo );
-
-    for (i = (largo-1) ; i >= 0 ; i--) { // uso largo-1 porque el indice del vector comienza en 0
-        numero += (string[i] - diferenciaASCII) * CDU;
-        CDU *= 10; // Se utiliza para calcular unidades, decenas, centenas ...
-    }
+   numero = my_atoi(string);
 
     printf("El string ingresado es: ´%s´ \n", string);
     printf("La conversion se realizo exitosamente, el NUMERO (int) ingresado es: %d \n", numero);
@@ -52,5 +46,19 @@ int main()
     return 0;
 }
 
+int my_atoi(char* string){
+    
+    int largo, i, numero = 0; 
+    int CDU = 1;    // Clasificación Decimal Universal 1, 10, 100, 1000 ...
+
+    largo = strlen(string);
+
+    for (i = (largo-1) ; i >= 0 ; i--) { // uso largo-1 porque el indice del vector comienza en 0
+        numero += (string[i] - diferenciaASCII) * CDU;
+        CDU *= 10; // Se utiliza para calcular unidades, decenas, centenas ...
+    }
+
+    return numero;
+}
 
 

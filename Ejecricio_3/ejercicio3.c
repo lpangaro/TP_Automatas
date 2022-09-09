@@ -9,6 +9,8 @@
 
 int isoperator(char);
 int validar_vector (char *);
+int my_atoi(char* string);
+
 void separo_operadores (char *);
 
 int main(){
@@ -42,12 +44,11 @@ int main(){
     if (validar_vector(vector_operacion)){
 
 
-        separo_operadores(vector_operacion);
+        //ACA VIENE LA LOGICA 
 
 
     }
-    
-    fclose (f_salida);
+
     return 0;
 }
 
@@ -67,11 +68,13 @@ int validar_vector(char* vector_operacion) {
 
 }
 
-bool isoperator (char c){
+int isoperator (char c){
     if (strcmp(c, "+") == 0 || strcmp(c, "-") == 0 || strcmp(c, "*") == 0)
         return 0;
     return 1;
 }
+
+
 
 void ingreso_por_archivo (char* archivo, char* vector_operacion) {
     int i = 0;
@@ -91,4 +94,20 @@ void ingreso_por_archivo (char* archivo, char* vector_operacion) {
     }
 
     fclose (f_entrada);
+}
+
+//Convierte una cadena de numeros a enteros
+int my_atoi(char* string){
+    
+    int largo, i, numero = 0; 
+    int CDU = 1;    // Clasificación Decimal Universal 1, 10, 100, 1000 ...
+
+    largo = strlen(string);
+
+    for (i = (largo-1) ; i >= 0 ; i--) { // uso largo-1 porque el indice del vector comienza en 0
+        numero += (string[i] - diferenciaASCII) * CDU;
+        CDU *= 10; // Se utiliza para calcular unidades, decenas, centenas ...
+    }
+
+    return numero;
 }
