@@ -5,20 +5,36 @@
 
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
+#include <ctype.h>
 
+#define diferenciaASCII 48
+ 
+typedef struct t_nodo 
+{
+   int info;
+   struct t_nodo *sig;
+} nodo;
+ 
+typedef nodo* ptr_nodo;
+ 
 
+ //Prototipos de Funciones
+void Push(ptr_nodo* pila, int info);
+int Pop(ptr_nodo* pila);
 int isoperator(char);
 int validar_vector (char *);
 int my_atoi(char* string);
 void ingreso_por_archivo (char* archivo, char* vector_operacion);
+int calcular(char* vector_operacion);
 
 
 int main(){
 
-    int menu;
+    int menu, resultado;
     char archivo [20];
     char vector_operacion [1000];
-    FILE *f_salida = fopen ("salida.txt", "w");    
+
 
     printf("\n\n..:BIENVENIDE AL PROGRAMA DE AUTOMATAS:..\n");
     printf(" 1) si quiere ingresar la cadena por linea de comandos\n 2) si lo que deasea es ingresar la cadena a traves de un archivo txt \n");
@@ -44,12 +60,54 @@ int main(){
     if (validar_vector(vector_operacion)){
 
 
-        //ACA VIENE LA LOGICA 
-
+        resultado = calcular( vector_operacion);
+        printf("El Resultado es: %d \n", resultado);
 
     }
 
     return 0;
+}
+
+//MAL! ACA ESTOY TRABAJANDO CON ENTEROS Y EN REALIDAD TENGO CHAR!
+int calcular(char* vector_operacion) {
+    int i = 0;
+    ptr_nodo pila = NULL;
+    int valor, aux, resultado=0;
+
+    while(vector_operacion[i] != '\0') {
+
+        if(vector_operacion[i] == '+'){
+            valor = resultado;  
+            while((aux = Pop(&pila))>0){
+                valor += aux;
+            }
+
+            resultado = valor;
+            printf("=%d", resultado);
+        } 
+
+        else if(vector_operacion[i] == '-'){
+            valor = resultado;
+            while((aux = Pop(&pila))>0){
+                valor -= aux;
+            }
+
+            resultado = valor;
+            printf("=%d", resultado);
+        }
+
+        else if(vector_operacion[i] == '*'){
+            valor = resultado;
+            while((aux = Pop(&pila))>0){
+                valor *= aux;
+            }
+
+            resultado = valor;
+            printf("=%d", resultado);
+        }
+        i++;
+    }
+    return resultado;
 }
 
 
@@ -69,7 +127,7 @@ int validar_vector(char* vector_operacion) {
 }
 
 int isoperator (char c){
-    if (strcmp(c, "+") == 0 || strcmp(c, "-") == 0 || strcmp(c, "*") == 0)
+    if (c == '+' || c == '-' || c == '*' )
         return 0;
     return 1;
 }
@@ -110,4 +168,29 @@ int my_atoi(char* string){
     }
 
     return numero;
+}
+
+
+void Push(ptr_nodo *pila, int info) {
+   
+   ptr_nodo nuevo = (ptr_nodo)malloc(sizeof(nodo));
+   nuevo->info = info;
+ 
+   nuevo->sig = *pila;
+   *pila = nuevo;
+}
+ 
+int Pop(ptr_nodo *pila) {
+
+    int info;
+    ptr_nodo p = *pila;
+    
+    if(!p) 
+        return 0;
+
+    *pila = p->sig;
+    info = p->info;
+
+    free(p);
+    return info;
 }
