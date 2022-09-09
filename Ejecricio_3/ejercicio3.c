@@ -10,8 +10,8 @@
 int isoperator(char);
 int validar_vector (char *);
 int my_atoi(char* string);
+void ingreso_por_archivo (char* archivo, char* vector_operacion);
 
-void separo_operadores (char *);
 
 int main(){
 
