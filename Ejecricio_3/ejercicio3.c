@@ -105,6 +105,19 @@ int calcular(char* vector_operacion) {
             resultado = valor;
             printf("=%d", resultado);
         }
+
+        else{ //entonces es un numero
+            Push(&pila, atoi(n)); // ESTE ATOI NO TIENE QUE IR DEBERIA SER UN CHAR. 
+            /* EN CADA VUELTA DEBERIA IR ACUMULANDO CADA CARACTER HASTA QUE LLEGUE UN SIGNO. CUANDO LLEGA TODA LA CADENA ANTERIOR SE
+             * CONVIERTE A ENTERO CON my_atoi (ejercicio2)
+             * MI PROBLMEA ES QUE:  1 NO SE COMO HACER ESO, HABRIA QUE CAMBIAR POP Y PUSH PARA QUE FUNCIONEN CON CHAR EN VEZ DE INT
+             *                      2 PENSÉ EN IR HACIENDO UN STRCAT PARA IR CONCATENANDO EN CADA VUELTA. PERO DESPUES DEBERIA 
+             *                        LIAMPIAR ESE VECTOR DONDE ACUMULO LOS DIGITOS DEL NUMERO. POR EJEMPLO: TENGO LA CADENA "12"
+             *                        PRIMERO LEO EL "1", LUEGO EL "2" Y LO CONCATENO CON 1. ME QUEDA "12". ESE ARRAY LO PUEDO TRANSFORMAR EN UN NUMERO CON my_atoi
+             *                        SIN EMBARGO CUANDO LEA EL PROXIMO NUEMO EJ 32. ME VA A QUEDAR "1232". 
+             */
+        }
+
         i++;
     }
     return resultado;
