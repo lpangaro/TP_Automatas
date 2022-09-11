@@ -20,20 +20,23 @@ typedef nodo* ptr_nodo;
  
 
  //Prototipos de Funciones
-void Push(ptr_nodo* pila, int info);
-int Pop(ptr_nodo* pila);
 int isoperator(char);
 int validar_vector (char *);
 int my_atoi(char* string);
-void ingreso_por_archivo (char* archivo, char* vector_operacion);
-int calcular(char* vector_operacion);
+void ingreso_por_archivo (char* archivo, char* cadena);
+int separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num);
+int calcular (char* v_ope, int* v_num, int largo);
+
+
 
 
 int main(){
 
     int menu, resultado;
     char archivo [20];
-    char vector_operacion [1000];
+    char cadena [1000], v_ope[1000];
+    int v_num [1000];
+    int largo;
 
 
     printf("\n\n..:BIENVENIDE AL PROGRAMA DE AUTOMATAS:..\n");
@@ -46,94 +49,103 @@ int main(){
     switch (menu){
         case 1 :
             printf("Ingrese la cadena de caracteres numericos (Hexadecimales, Ocatales o Decimales): ");
-            scanf ("%s", vector_operacion);
+            scanf ("%s", cadena);
             break;
         case 2 : 
             printf("Ingrese el nombre del archivo (ej: entrada.txt): ");
             scanf ("%s", archivo);
-            ingreso_por_archivo(archivo, vector_operacion);
+            ingreso_por_archivo(archivo, cadena);
             break;
         default:
             printf ("No ingreso una opcion valida \n");
     }
     
-    if (validar_vector(vector_operacion)){
+    if (validar_vector(cadena)){
 
-
-        resultado = calcular( vector_operacion);
+        largo = separar_numeros_de_operadores(cadena, v_ope, v_num);
+        resultado = calcular(v_ope, v_num, largo);
         printf("El Resultado es: %d \n", resultado);
-
     }
 
     return 0;
 }
 
-//MAL! ACA ESTOY TRABAJANDO CON ENTEROS Y EN REALIDAD TENGO CHAR!
-int calcular(char* vector_operacion) {
-    int i = 0;
-    ptr_nodo pila = NULL;
-    int valor, aux, resultado=0;
 
-    while(vector_operacion[i] != '\0') {
 
-        if(vector_operacion[i] == '+'){
-            valor = resultado;  
-            while((aux = Pop(&pila))>0){
-                valor += aux;
-            }
+int separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num){
 
-            resultado = valor;
-            printf("=%d", resultado);
-        } 
+    char copy_cadena [1000]; // Cuando uso strtok pierdo el string
+    char *token;
+    int i=0, j=0, largo;
 
-        else if(vector_operacion[i] == '-'){
-            valor = resultado;
-            while((aux = Pop(&pila))>0){
-                valor -= aux;
-            }
+    memset(v_num, 0, 1000); // LIMPIO EL VECTOR 
+    memset(v_ope, 0, 1000); // LIMPIO EL VECTOR 
 
-            resultado = valor;
-            printf("=%d", resultado);
-        }
+    strcpy(copy_cadena, cadena);
 
-        else if(vector_operacion[i] == '*'){
-            valor = resultado;
-            while((aux = Pop(&pila))>0){
-                valor *= aux;
-            }
+    token = strtok(copy_cadena, "*+-");
+    while (token != NULL){
 
-            resultado = valor;
-            printf("=%d", resultado);
-        }
-
-        else{ //entonces es un numero
-            Push(&pila, atoi(n)); // ESTE ATOI NO TIENE QUE IR DEBERIA SER UN CHAR. 
-            /* EN CADA VUELTA DEBERIA IR ACUMULANDO CADA CARACTER HASTA QUE LLEGUE UN SIGNO. CUANDO LLEGA TODA LA CADENA ANTERIOR SE
-             * CONVIERTE A ENTERO CON my_atoi (ejercicio2)
-             * MI PROBLMEA ES QUE:  1 NO SE COMO HACER ESO, HABRIA QUE CAMBIAR POP Y PUSH PARA QUE FUNCIONEN CON CHAR EN VEZ DE INT
-             *                      2 PENSÉ EN IR HACIENDO UN STRCAT PARA IR CONCATENANDO EN CADA VUELTA. PERO DESPUES DEBERIA 
-             *                        LIAMPIAR ESE VECTOR DONDE ACUMULO LOS DIGITOS DEL NUMERO. POR EJEMPLO: TENGO LA CADENA "12"
-             *                        PRIMERO LEO EL "1", LUEGO EL "2" Y LO CONCATENO CON 1. ME QUEDA "12". ESE ARRAY LO PUEDO TRANSFORMAR EN UN NUMERO CON my_atoi
-             *                        SIN EMBARGO CUANDO LEA EL PROXIMO NUEMO EJ 32. ME VA A QUEDAR "1232". 
-             */
-        }
-
+        v_num[i] = my_atoi(token); //Convierto el string a int y lo guardo en v_num
+        token = strtok(NULL, "*+-");
         i++;
     }
-    return resultado;
+
+    largo = i; //Necesito saber cuantas posiciones del vector ocupé
+
+    for(i=0; i < (strlen(cadena)); i++){
+        if(isoperator(cadena[i])==0){
+            v_ope[j] = cadena[i];
+            j++;
+        }
+    }
+
+    return largo; //devuelvo el largo del vector de numeros
+}
+
+int calcular (char* v_ope, int* v_num, int largo) {
+    int i, resultado = 0;
+
+    for(i=0; i < strlen(v_ope); i++){
+        if(v_ope[i] == '*'){    //Primero resuelvo el * para respetar precedencia
+            v_num[i] = v_num[i] * v_num[i+1];
+            v_num[i+1] = 0;
+        }
+    }
+
+    for(i=0; i < strlen(v_ope); i++){
+        if(v_ope[i] == '+'){
+            v_num[i] = v_num[i] + v_num[i+1];
+            v_num[i+1] = 0;
+        }
+        if(v_ope[i] == '-'){
+            v_num[i] = v_num[i] - v_num[i+1];
+            v_num[i+1] = 0;
+        }
+    }
+
+    for(i=0; i < largo; i++){
+        resultado += v_num[i];
+    }
+    
+return resultado;
 }
 
 
-int validar_vector(char* vector_operacion) {
+int validar_vector(char* cadena) {
 
     int i = 0;
 
-    while (vector_operacion[i] != '\0') {
-        if(isdigit(vector_operacion[i]) || isoperator(vector_operacion[i])) {
+    while (cadena[i] != '\0') {
+        if(isdigit(cadena[i])) {
+            i++;
+        }
+        else if (isoperator(cadena[i]) && isdigit(cadena[i - 1]) && isdigit(cadena[i + 1])) {
+            // SI el caracter leido es un operador tambien verifico que en la posicion siguiente y anterior haya un numero
             i++;
         }
         else 
-             return 1;
+            return 1;
     }
     return 0;
 
@@ -147,7 +159,7 @@ int isoperator (char c){
 
 
 
-void ingreso_por_archivo (char* archivo, char* vector_operacion) {
+void ingreso_por_archivo (char* archivo, char* cadena) {
     int i = 0;
     FILE *f_entrada = fopen(archivo,"r");
 
@@ -156,11 +168,11 @@ void ingreso_por_archivo (char* archivo, char* vector_operacion) {
     }
 
     else {
-        fread(&vector_operacion[i], sizeof(char), 1, f_entrada);   //primer elemento
+        fread(&cadena[i], sizeof(char), 1, f_entrada);   //primer elemento
 
         while(!feof(f_entrada)) {
             i++;
-            fread(&vector_operacion[i], sizeof(char), 1, f_entrada);      //LECTURA DEL ARCHIVO, GUARDO ELEMENTOS DE ENTRADA EN EL VECTOR.
+            fread(&cadena[i], sizeof(char), 1, f_entrada);      //LECTURA DEL ARCHIVO, GUARDO ELEMENTOS DE ENTRADA EN EL VECTOR.
         }
     }
 

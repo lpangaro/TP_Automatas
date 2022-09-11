@@ -14,7 +14,8 @@ enum ESTADOS{                                                                   
     CONSTANTE_OCTAL2,
     CONSTANTE_HEXADECIMAL1,
     CONSTANTE_HEXADECIMAL2,
-    CONSTANTE_DECIMAL,
+    CONSTANTE_DECIMAL1,
+    CONSTANTE_DECIMAL2,
     DESCONOCIDO                                                                         // DESCONOCIDO actúa como estado de rechazo
 };
 
@@ -103,9 +104,9 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                 if(valor[i] == '0')                                                     // ¿El primer caracter es un 0?
                     estado = CONSTANTE_OCTAL1;                                          
                 else if(isdigit(valor[i]))                           // isdigit evalua si es un caracter numerico.
-                    estado = CONSTANTE_DECIMAL;               
-                else if (valor[i] == '-'){
-                    estado = CONSTANTE_DECIMAL;
+                    estado = CONSTANTE_DECIMAL1;               
+                else if (valor[i] == '-'){    
+                    estado = CONSTANTE_DECIMAL2;
                 }
                 else
                     estado = DESCONOCIDO;                                               // Si es un primer caracter no numerico es no reconocido.
@@ -161,14 +162,25 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                 i++;
                 break;
 
-            case CONSTANTE_DECIMAL:
+            case CONSTANTE_DECIMAL1:
                 if(valor[i] == '\0'){
                     (*cant_deci)++;
                     fprintf(f_salida, "%-20s\t %d DECIMAL\n", valor, *cant_deci);                 // ¿FIN? 
                     return;
                 }
                 else if(isdigit(valor[i]))
-                    estado = CONSTANTE_DECIMAL;
+                    estado = CONSTANTE_DECIMAL1;
+                else
+                    estado = DESCONOCIDO;
+                i++;
+                break;
+
+            case CONSTANTE_DECIMAL2: //signo menos
+                if(valor[i] == '\0'){                   // ¿FIN? Hay un signo menos suelto?
+                     estado = DESCONOCIDO;
+                }
+                else if(isdigit(valor[i]) && valor[i] - '0' < 0) //no puedo tener -01. si tengo el '-' no le puede seguir '0'
+                    estado = CONSTANTE_DECIMAL1;
                 else
                     estado = DESCONOCIDO;
                 i++;
