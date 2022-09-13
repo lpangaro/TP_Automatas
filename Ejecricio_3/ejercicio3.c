@@ -10,34 +10,23 @@
 
 #define diferenciaASCII 48
  
-typedef struct t_nodo 
-{
-   int info;
-   struct t_nodo *sig;
-} nodo;
- 
-typedef nodo* ptr_nodo;
- 
 
- //Prototipos de Funciones
+ //PROTOTIPOS DE FUNCIONES
 int isoperator(char);
 int validar_vector (char *);
 int my_atoi(char* string);
 void ingreso_por_archivo (char* archivo, char* cadena);
-int separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num);
+void separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num, int* largo);
 int calcular (char* v_ope, int* v_num, int largo);
-
-
 
 
 int main(){
 
     int menu, resultado;
-    char archivo [20];
+    char name_file [20];
     char cadena [1000], v_ope[1000];
     int v_num [1000];
     int largo;
-
 
     printf("\n\n..:BIENVENIDE AL PROGRAMA DE AUTOMATAS:..\n");
     printf(" 1) si quiere ingresar la cadena por linea de comandos\n 2) si lo que deasea es ingresar la cadena a traves de un archivo txt \n");
@@ -51,18 +40,21 @@ int main(){
             printf("Ingrese la cadena de caracteres numericos (Hexadecimales, Ocatales o Decimales): ");
             scanf ("%s", cadena);
             break;
+
         case 2 : 
             printf("Ingrese el nombre del archivo (ej: entrada.txt): ");
-            scanf ("%s", archivo);
-            ingreso_por_archivo(archivo, cadena);
+            scanf ("%s", name_file);
+            ingreso_por_archivo(name_file, cadena);
             break;
+
         default:
             printf ("No ingreso una opcion valida \n");
+            return 1;
     }
     
     if (validar_vector(cadena)){
 
-        largo = separar_numeros_de_operadores(cadena, v_ope, v_num);
+        separar_numeros_de_operadores(cadena, v_ope, v_num, &largo); // largo es la cantidad de elementos ocupados en v_num
         resultado = calcular(v_ope, v_num, largo);
         printf("El Resultado es: %d \n", resultado);
     }
@@ -71,18 +63,19 @@ int main(){
 }
 
 
-
-int separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num){
+//FUNCIONES
+void separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num, int* largo){
 
     char copy_cadena [1000]; // Cuando uso strtok pierdo el string
     char *token;
-    int i=0, j=0, largo;
+    int i=0, j=0;
 
     memset(v_num, 0, 1000); // LIMPIO EL VECTOR 
     memset(v_ope, 0, 1000); // LIMPIO EL VECTOR 
 
     strcpy(copy_cadena, cadena);
 
+    //GUARDO LOS NUMEROS EN v_num
     token = strtok(copy_cadena, "*+-");
     while (token != NULL){
 
@@ -90,24 +83,22 @@ int separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num){
         token = strtok(NULL, "*+-");
         i++;
     }
+    (*largo) = i; //Necesito saber cuantas posiciones del vector ocupé
 
-    largo = i; //Necesito saber cuantas posiciones del vector ocupé
-
+    //GUARDO LOS OPERADORES EN v_ope
     for(i=0; i < (strlen(cadena)); i++){
         if(isoperator(cadena[i])==0){
             v_ope[j] = cadena[i];
             j++;
         }
     }
-
-    return largo; //devuelvo el largo del vector de numeros
 }
 
 int calcular (char* v_ope, int* v_num, int largo) {
     int i, resultado = 0;
 
-    for(i=0; i < strlen(v_ope); i++){
-        if(v_ope[i] == '*'){    //Primero resuelvo el * para respetar precedencia
+    for(i=(strlen(v_ope) - 1); i >= 0; i--){                // recorro de atras para adelante por si tengo multeples productos no multiplicar pot 0
+        if(v_ope[i] == '*'){                                //Primero resuelvo el * para respetar precedencia
             v_num[i] = v_num[i] * v_num[i+1];
             v_num[i+1] = 0;
         }
@@ -128,7 +119,7 @@ int calcular (char* v_ope, int* v_num, int largo) {
         resultado += v_num[i];
     }
     
-return resultado;
+    return resultado;
 }
 
 
@@ -156,8 +147,6 @@ int isoperator (char c){
         return 0;
     return 1;
 }
-
-
 
 void ingreso_por_archivo (char* archivo, char* cadena) {
     int i = 0;
@@ -193,29 +182,4 @@ int my_atoi(char* string){
     }
 
     return numero;
-}
-
-
-void Push(ptr_nodo *pila, int info) {
-   
-   ptr_nodo nuevo = (ptr_nodo)malloc(sizeof(nodo));
-   nuevo->info = info;
- 
-   nuevo->sig = *pila;
-   *pila = nuevo;
-}
- 
-int Pop(ptr_nodo *pila) {
-
-    int info;
-    ptr_nodo p = *pila;
-    
-    if(!p) 
-        return 0;
-
-    *pila = p->sig;
-    info = p->info;
-
-    free(p);
-    return info;
 }
