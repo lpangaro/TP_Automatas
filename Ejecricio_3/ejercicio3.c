@@ -59,6 +59,9 @@ int main(){
         printf("El Resultado es: %d \n", resultado);
     }
 
+    else
+        printf("Vector invalido\n");
+
     return 0;
 }
 
@@ -79,7 +82,7 @@ void separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num, int* l
     token = strtok(copy_cadena, "*+-");
     while (token != NULL){
 
-        v_num[i] = my_atoi(token); //Convierto el string a int y lo guardo en v_num
+        v_num[i] = my_atoi(token); //Convierto el string a int y lo guardo en v_num (funcion del punto 2)
         token = strtok(NULL, "*+-");
         i++;
     }
@@ -128,18 +131,18 @@ int validar_vector(char* cadena) {
     int i = 0;
 
     while (cadena[i] != '\0') {
-        if(isdigit(cadena[i])) {
+        if(!isdigit(cadena[i])) { // isdigit devuelve un valor no nulo si es un digito
             i++;
         }
-        else if (isoperator(cadena[i]) && isdigit(cadena[i - 1]) && isdigit(cadena[i + 1])) {
+        else if (isoperator(cadena[i]) && !isdigit(cadena[i - 1]) && !isdigit(cadena[i + 1])) {
             // SI el caracter leido es un operador tambien verifico que en la posicion siguiente y anterior haya un numero
             i++;
         }
         else 
             return 1;
     }
-    return 0;
 
+    return 0;
 }
 
 int isoperator (char c){
