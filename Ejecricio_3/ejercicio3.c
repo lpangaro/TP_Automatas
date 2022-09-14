@@ -9,6 +9,8 @@
 #include <ctype.h>
 
 #define diferenciaASCII 48
+#define False 0
+#define True 1
  
 
  //PROTOTIPOS DE FUNCIONES
@@ -127,28 +129,26 @@ int calcular (char* v_ope, int* v_num, int largo) {
 
 
 int validar_vector(char* cadena) {
-
-    int i = 0;
+    int i=0;
 
     while (cadena[i] != '\0') {
-        if(!isdigit(cadena[i])) { // isdigit devuelve un valor no nulo si es un digito
+        if(isdigit(cadena[i])) { // isdigit devuelve un valor no nulo si es un digito
             i++;
         }
-        else if (isoperator(cadena[i]) && !isdigit(cadena[i - 1]) && !isdigit(cadena[i + 1])) {
+        else if (isoperator(cadena[i]) && isdigit(cadena[i - 1]) && isdigit(cadena[i + 1])) {
             // SI el caracter leido es un operador tambien verifico que en la posicion siguiente y anterior haya un numero
             i++;
         }
         else 
-            return 1;
+            return False; //invalido
     }
-
-    return 0;
+    return True; //valido
 }
 
 int isoperator (char c){
     if (c == '+' || c == '-' || c == '*' )
-        return 0;
-    return 1;
+        return True;
+    return False;
 }
 
 void ingreso_por_archivo (char* archivo, char* cadena) {

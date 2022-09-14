@@ -1,6 +1,8 @@
 Numero                 Cant   Tipo
-0Xa                 	 1 HEXADECIMAL
-0XA                 	 2 HEXADECIMAL
-0xa                 	 3 HEXADECIMAL
-0xA                 	 4 HEXADECIMAL
--03                 	NO RECONOCIDA
+10                  	 1 DECIMAL
+23                  	 2 DECIMAL
+0                   	 1 OCTAL
+00                  	 2 OCTAL
+0x1                 	 1 HEXADECIMAL
+0xg                 	NO RECONOCIDA
+0x                  	 2 HEXADECIMAL
