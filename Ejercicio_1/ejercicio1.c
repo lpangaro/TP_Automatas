@@ -51,7 +51,7 @@ int main(){
             printf ("No ingreso una opcion valida \n");
     }
     
-    separar_y_reconocer(vector_palabras, f_salida);                           // PASO EL ARRAY CON LAS PALABRAS A RECONOCER
+    separar_y_reconocer(vector_palabras, f_salida);  // PASO EL ARRAY CON LAS PALABRAS A RECONOCER
     printf("Archivo creado exitosamente. Para visiualizarlo escriba: ´cat salida.txt´\n");
     
     fclose (f_salida);
@@ -121,7 +121,7 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                 }
                 else if(valor[i] == 'x' || valor[i] == 'X')                             // ¿LE SIGUE UNA X? ES HEXADECIMAL
                     estado = CONSTANTE_HEXADECIMAL2;
-                else if(isdigit(valor[i]) && valor[i] - '0' < 8)                        // ¿EL CHAR NUMERAL ES MENOR QUE 8?
+                else if(isdigit(valor[i]) && valor[i] - '0' <= 7)                        // ¿EL CHAR NUMERAL ES MENOR QUE 8?
                     estado = CONSTANTE_OCTAL;
                 else
                     estado = DESCONOCIDO;
@@ -134,7 +134,7 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                     fprintf(f_salida, "%-20s\t %d OCTAL\n", valor, *cant_oct);
                     return;
                 }
-                else if(isdigit(valor[i]) && valor[i] - '0' < 8)
+                else if(isdigit(valor[i]) && valor[i] - '0' <= 7)
                     estado = CONSTANTE_OCTAL;
                 else
                     estado = DESCONOCIDO;
@@ -179,7 +179,7 @@ void reconocer(char* valor, FILE* f_salida, int* cant_oct, int* cant_deci, int* 
                 if(valor[i] == '\0'){                   // ¿FIN? Hay un signo menos suelto?
                      estado = DESCONOCIDO;
                 }
-                else if(isdigit(valor[i]) && valor[i] - '0' < 0) //no puedo tener -01. si tengo el '-' no le puede seguir '0'
+                else if(isdigit(valor[i]) && valor[i] - '0' > 0) //no puedo tener -01. si tengo el '-' no le puede seguir '0'
                     estado = CONSTANTE_DECIMAL;
                 else
                     estado = DESCONOCIDO;
