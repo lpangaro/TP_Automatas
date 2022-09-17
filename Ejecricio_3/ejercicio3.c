@@ -13,9 +13,9 @@
 #define True 1
  
 enum ESTADOS {
-    INICIO = 0,
-    NUMERO,
-    NUMERO_O_OPERADOR,
+    INICIO = 0,         //Q1
+    NUMERO,             //Q3
+    NUMERO_O_OPERADOR,  //Q2
     RECHAZO
 };
 
@@ -133,7 +133,7 @@ int calcular (char* v_ope, int* v_num, int largo) {
     return resultado;
 }
 
-
+//AUTOMATA
 int validar_vector(char* cadena) {
     int estado = INICIO, i=0;
     while(1){
@@ -198,7 +198,7 @@ void ingreso_por_archivo (char* archivo, char* cadena) {
     fclose (f_entrada);
 }
 
-//Convierte una cadena de numeros a enteros
+//Convierte una cadena de numeros a enteros (punto 2)
 int my_atoi(char* string){
     
     int largo, i, numero = 0; 
