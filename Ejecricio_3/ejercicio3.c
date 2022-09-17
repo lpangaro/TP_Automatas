@@ -12,6 +12,12 @@
 #define False 0
 #define True 1
  
+enum ESTADOS {
+    INICIO = 0,
+    NUMERO,
+    NUMERO_O_OPERADOR,
+    RECHAZO
+};
 
  //PROTOTIPOS DE FUNCIONES
 int isoperator(char);
@@ -92,7 +98,7 @@ void separar_numeros_de_operadores(char* cadena, char* v_ope, int* v_num, int* l
 
     //GUARDO LOS OPERADORES EN v_ope
     for(i=0; i < (strlen(cadena)); i++){
-        if(isoperator(cadena[i])==0){
+        if(isoperator(cadena[i])){
             v_ope[j] = cadena[i];
             j++;
         }
@@ -129,20 +135,41 @@ int calcular (char* v_ope, int* v_num, int largo) {
 
 
 int validar_vector(char* cadena) {
-    int i=0;
+    int estado = INICIO, i=0;
+    while(1){
+        switch(estado){
+            case INICIO: //Q1
+                if(isdigit(cadena[i]))
+                    estado = NUMERO_O_OPERADOR;
+                else
+                    estado = RECHAZO;
+                i++;
+                break;
 
-    while (cadena[i] != '\0') {
-        if(isdigit(cadena[i])) { // isdigit devuelve un valor no nulo si es un digito
-            i++;
+            case NUMERO_O_OPERADOR: //Q2
+                if (cadena[i] == '\0')
+                    return True; //valido
+                else if(isdigit(cadena[i]))
+                    estado = NUMERO_O_OPERADOR;
+                else if(isoperator(cadena[i]))
+                    estado = NUMERO; //Despues de un operador viene si o si un numero
+                else 
+                    estado = RECHAZO;
+                i++;
+                break;
+
+            case NUMERO: //Q3
+                if(isdigit(cadena[i]))
+                        estado = NUMERO_O_OPERADOR;
+                    else
+                        estado = RECHAZO;
+                i++;
+                break;
+
+            case RECHAZO:
+                return False; //invalido
         }
-        else if (isoperator(cadena[i]) && isdigit(cadena[i - 1]) && isdigit(cadena[i + 1])) {
-            // SI el caracter leido es un operador tambien verifico que en la posicion siguiente y anterior haya un numero
-            i++;
-        }
-        else 
-            return False; //invalido
     }
-    return True; //valido
 }
 
 int isoperator (char c){
